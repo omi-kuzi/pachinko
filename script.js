@@ -1,5 +1,5 @@
-let baseChance = 1 / 550; // 初期確率
-let currentChance = baseChance; // 現在の確率
+let baseChance = 1 / 550;
+let currentChance = baseChance;
 
 let reels = [
   ["7", "BAR", "🍒"],
@@ -14,30 +14,40 @@ let spinButton = document.getElementById("spinButton");
 spinButton.addEventListener("click", spin);
 
 function spin() {
-  // 回転アニメーション
   spinButton.disabled = true;
+
   let reel1 = document.getElementById("reel1");
   let reel2 = document.getElementById("reel2");
   let reel3 = document.getElementById("reel3");
 
+  // 回転アニメーション
   let spinAnimation = () => {
     reel1.innerHTML = getRandomElement(reels[0]);
     reel2.innerHTML = getRandomElement(reels[1]);
     reel3.innerHTML = getRandomElement(reels[2]);
 
-    // 3回目の回転まで
-    setTimeout(spinAnimation, 100);
+    // 1秒後にリール停止
+    setTimeout(() => {
+      reel1.innerHTML = getRandomElement(reels[0]);
+      reel2.innerHTML = getRandomElement(reels[1]);
+      reel3.innerHTML = getRandomElement(reels[2]);
+    }, 100);
   };
 
-  spinAnimation();
+  // リールが動く
+  reel1.classList.add("highlight");
+  reel2.classList.add("highlight");
+  reel3.classList.add("highlight");
 
-  // 1秒後に最終結果を表示
+  // 1秒後に停止して結果を表示
   setTimeout(() => {
-    // 結果判定
+    reel1.classList.remove("highlight");
+    reel2.classList.remove("highlight");
+    reel3.classList.remove("highlight");
+
     let result = checkResult();
     resultText.innerHTML = `結果: ${result}`;
 
-    // 昇格演出
     if (result === "昇格！") {
       message.innerHTML = "おめでとう！昇格しました！";
     } else if (result === "リーチ！") {
@@ -58,23 +68,22 @@ function getRandomElement(reel) {
 }
 
 function checkResult() {
-  // スロットが3つ同じで揃ったら当たり
   let reel1 = document.getElementById("reel1").innerText;
   let reel2 = document.getElementById("reel2").innerText;
   let reel3 = document.getElementById("reel3").innerText;
 
+  // スロットが3つ同じで揃ったら当たり
   if (reel1 === reel2 && reel2 === reel3) {
     return "ジャックポット！";
   }
 
   // リーチ演出
   if (reel1 === reel2 || reel2 === reel3 || reel1 === reel3) {
-    triggerFlash(reel1 === reel2 ? "reel1" : reel2 === reel3 ? "reel2" : "reel3");
     return "リーチ！";
   }
 
   // 昇格演出
-  if (Math.random() < 0.1) { // 10%の確率で昇格演出
+  if (Math.random() < 0.1) {
     if (reel1 === "BAR") {
       document.getElementById("reel1").innerText = "7";
       return "昇格！";
@@ -88,14 +97,6 @@ function checkResult() {
   }
 
   return "ハズレ";
-}
-
-function triggerFlash(reelId) {
-  let reel = document.getElementById(reelId);
-  reel.classList.add("flash");
-  setTimeout(() => {
-    reel.classList.remove("flash");
-  }, 500);
 }
 
 function updateChance() {
