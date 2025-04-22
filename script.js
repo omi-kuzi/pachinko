@@ -21,30 +21,25 @@ function spin() {
   let reel3 = document.getElementById("reel3");
 
   // 回転アニメーション
-  let spinAnimation = () => {
-    reel1.innerHTML = getRandomElement(reels[0]);
-    reel2.innerHTML = getRandomElement(reels[1]);
-    reel3.innerHTML = getRandomElement(reels[2]);
+  let rotateReels = (duration) => {
+    let stopTime = Date.now() + duration;
 
-    // 1秒後にリール停止
-    setTimeout(() => {
-      reel1.innerHTML = getRandomElement(reels[0]);
-      reel2.innerHTML = getRandomElement(reels[1]);
-      reel3.innerHTML = getRandomElement(reels[2]);
-    }, 100);
+    let rotate = () => {
+      if (Date.now() < stopTime) {
+        reel1.innerHTML = getRandomElement(reels[0]);
+        reel2.innerHTML = getRandomElement(reels[1]);
+        reel3.innerHTML = getRandomElement(reels[2]);
+        requestAnimationFrame(rotate); // 次のフレームで繰り返し
+      }
+    };
+
+    rotate(); // 最初の回転を開始
   };
 
-  // リールが動く
-  reel1.classList.add("highlight");
-  reel2.classList.add("highlight");
-  reel3.classList.add("highlight");
+  // リールが回転開始
+  rotateReels(1500); // 1.5秒間回転
 
-  // 1秒後に停止して結果を表示
   setTimeout(() => {
-    reel1.classList.remove("highlight");
-    reel2.classList.remove("highlight");
-    reel3.classList.remove("highlight");
-
     let result = checkResult(reel1, reel2, reel3);
     resultText.innerHTML = `結果: ${result}`;
 
@@ -62,7 +57,7 @@ function spin() {
     updateChance();
 
     spinButton.disabled = false;
-  }, 1000);
+  }, 1500); // 回転が終わるまで待つ
 }
 
 function getRandomElement(reel) {
