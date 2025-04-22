@@ -3,17 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>パチンコゲーム</title>
-  <link rel="stylesheet" href="style.css">
+  <title>スロットゲーム</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="game-container">
-    <canvas id="slotCanvas"></canvas>
-    <button id="spinButton">スピン</button>
-    <div id="resultDiv">結果: まだ回していません</div>
-    <audio id="winSound" src="win_sound.mp3"></audio>
-    <audio id="buttonSound" src="button_click.mp3"></audio>
+  <div class="slot-container">
+    <div class="slot-reel" id="reel1">
+      <span>7</span>
+      <span>BAR</span>
+      <span>🍒</span>
+    </div>
+    <div class="slot-reel" id="reel2">
+      <span>7</span>
+      <span>BAR</span>
+      <span>🍒</span>
+    </div>
+    <div class="slot-reel" id="reel3">
+      <span>7</span>
+      <span>BAR</span>
+      <span>🍒</span>
+    </div>
   </div>
+
+  <button id="spinButton">回す</button>
+  <div id="result">結果: まだ回していません</div>
+  <div id="message"></div>
 
   <script src="script.js"></script>
 </body>
