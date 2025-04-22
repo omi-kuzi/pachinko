@@ -45,7 +45,7 @@ function spin() {
     reel2.classList.remove("highlight");
     reel3.classList.remove("highlight");
 
-    let result = checkResult();
+    let result = checkResult(reel1, reel2, reel3);
     resultText.innerHTML = `結果: ${result}`;
 
     if (result === "昇格！") {
@@ -67,30 +67,33 @@ function getRandomElement(reel) {
   return reel[Math.floor(Math.random() * reel.length)];
 }
 
-function checkResult() {
-  let reel1 = document.getElementById("reel1").innerText;
-  let reel2 = document.getElementById("reel2").innerText;
-  let reel3 = document.getElementById("reel3").innerText;
+function checkResult(reel1, reel2, reel3) {
+  reel1 = reel1.innerText;
+  reel2 = reel2.innerText;
+  reel3 = reel3.innerText;
 
-  // スロットが3つ同じで揃ったら当たり
+  // ジャックポット：すべてのリールが一致
   if (reel1 === reel2 && reel2 === reel3) {
     return "ジャックポット！";
   }
 
-  // リーチ演出
+  // リーチ：リールが2つ以上一致
   if (reel1 === reel2 || reel2 === reel3 || reel1 === reel3) {
     return "リーチ！";
   }
 
-  // 昇格演出
-  if (Math.random() < 0.1) {
+  // 昇格演出：BARが出たときに昇格
+  if (Math.random() < 0.1) { // 10%の確率で昇格演出
     if (reel1 === "BAR") {
+      reel1 = "7";
       document.getElementById("reel1").innerText = "7";
       return "昇格！";
     } else if (reel2 === "BAR") {
+      reel2 = "7";
       document.getElementById("reel2").innerText = "7";
       return "昇格！";
     } else if (reel3 === "BAR") {
+      reel3 = "7";
       document.getElementById("reel3").innerText = "7";
       return "昇格！";
     }
