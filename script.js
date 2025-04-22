@@ -45,10 +45,13 @@ function spin() {
 
     if (result === "昇格！") {
       message.innerHTML = "おめでとう！昇格しました！";
+      addAnimation(reel1, reel2, reel3, 'highlight'); // 昇格演出
     } else if (result === "リーチ！") {
       message.innerHTML = "リーチ状態！次回は当たりかも！";
+      reachEffect(reel1, reel2, reel3); // リーチ演出
     } else if (result === "ジャックポット！") {
       message.innerHTML = "ジャックポット！おめでとう！";
+      jackpotEffect(reel1, reel2, reel3); // ジャックポット演出
     } else {
       message.innerHTML = "";
     }
@@ -107,4 +110,39 @@ function updateChance() {
   if (Math.random() < currentChance) {
     console.log("確率が上がった!");
   }
+}
+
+function addAnimation(reel1, reel2, reel3, className) {
+  reel1.classList.add(className);
+  reel2.classList.add(className);
+  reel3.classList.add(className);
+
+  setTimeout(() => {
+    reel1.classList.remove(className);
+    reel2.classList.remove(className);
+    reel3.classList.remove(className);
+  }, 1000); // 1秒間アニメーション
+}
+
+function reachEffect(reel1, reel2, reel3) {
+  // リーチ時にリールの周りを光らせる
+  reel1.classList.add("highlight");
+  reel2.classList.add("highlight");
+  reel3.classList.add("highlight");
+
+  setTimeout(() => {
+    reel1.classList.remove("highlight");
+    reel2.classList.remove("highlight");
+    reel3.classList.remove("highlight");
+  }, 1000); // 1秒間光らせる
+}
+
+function jackpotEffect(reel1, reel2, reel3) {
+  // ジャックポット時に全画面でアニメーション
+  document.body.style.backgroundColor = "gold"; // 背景色を金色に変更
+  document.body.style.transition = "background-color 1s ease";
+
+  setTimeout(() => {
+    document.body.style.backgroundColor = ""; // 背景色を元に戻す
+  }, 1000);
 }
