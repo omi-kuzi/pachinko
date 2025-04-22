@@ -52,6 +52,8 @@ function spin() {
       message.innerHTML = "おめでとう！昇格しました！";
     } else if (result === "リーチ！") {
       message.innerHTML = "リーチ状態！次回は当たりかも！";
+    } else if (result === "ジャックポット！") {
+      message.innerHTML = "ジャックポット！おめでとう！";
     } else {
       message.innerHTML = "";
     }
