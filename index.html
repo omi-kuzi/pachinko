@@ -3,32 +3,228 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>スロットゲーム</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>スロットマシン</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 50px;
+    }
+
+    .reel-container {
+      display: inline-block;
+      margin: 20px;
+    }
+
+    .reel {
+      font-size: 50px;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      border: 2px solid #333;
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    .highlight {
+      animation: highlight 1s ease-in-out infinite;
+    }
+
+    @keyframes highlight {
+      0% { transform: scale(1); background-color: gold; }
+      100% { transform: scale(1.2); background-color: yellow; }
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #result {
+      font-size: 24px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #message {
+      font-size: 18px;
+      margin-top: 10px;
+      color: green;
+    }
+  </style>
 </head>
 <body>
-  <div class="slot-container">
-    <div class="slot-reel" id="reel1">
-      <span>7</span>
-      <span>BAR</span>
-      <span>🍒</span>
-    </div>
-    <div class="slot-reel" id="reel2">
-      <span>7</span>
-      <span>BAR</span>
-      <span>🍒</span>
-    </div>
-    <div class="slot-reel" id="reel3">
-      <span>7</span>
-      <span>BAR</span>
-      <span>🍒</span>
-    </div>
+  <div class="reel-container">
+    <div id="reel1" class="reel">7</div>
+    <div id="reel2" class="reel">7</div>
+    <div id="reel3" class="reel">7</div>
   </div>
 
-  <button id="spinButton">回す</button>
-  <div id="result">結果: まだ回していません</div>
+  <button id="spinButton">スピン！</button>
+
+  <div id="result"></div>
   <div id="message"></div>
 
-  <script src="script.js"></script>
+  <script>
+    let baseChance = 1 / 550;
+    let currentChance = baseChance;
+
+    let reels = [
+      ["7", "BAR", "🍒"],
+      ["7", "BAR", "🍒"],
+      ["7", "BAR", "🍒"]
+    ];
+
+    let resultText = document.getElementById("result");
+    let message = document.getElementById("message");
+    let spinButton = document.getElementById("spinButton");
+
+    spinButton.addEventListener("click", spin);
+
+    function spin() {
+      spinButton.disabled = true;
+
+      let reel1 = document.getElementById("reel1");
+      let reel2 = document.getElementById("reel2");
+      let reel3 = document.getElementById("reel3");
+
+      // 回転アニメーション
+      let rotateReels = (duration) => {
+        let stopTime = Date.now() + duration;
+
+        let rotate = () => {
+          if (Date.now() < stopTime) {
+            reel1.innerHTML = getRandomElement(reels[0]);
+            reel2.innerHTML = getRandomElement(reels[1]);
+            reel3.innerHTML = getRandomElement(reels[2]);
+            requestAnimationFrame(rotate); // 次のフレームで繰り返し
+          }
+        };
+
+        rotate(); // 最初の回転を開始
+      };
+
+      // リールが回転開始
+      rotateReels(1500); // 1.5秒間回転
+
+      setTimeout(() => {
+        let result = checkResult(reel1, reel2, reel3);
+        resultText.innerHTML = `結果: ${result}`;
+
+        if (result === "昇格！") {
+          message.innerHTML = "おめでとう！昇格しました！";
+          addAnimation(reel1, reel2, reel3, 'highlight'); // 昇格演出
+        } else if (result === "リーチ！") {
+          message.innerHTML = "リーチ状態！次回は当たりかも！";
+          reachEffect(reel1, reel2, reel3); // リーチ演出
+        } else if (result === "ジャックポット！") {
+          message.innerHTML = "ジャックポット！おめでとう！";
+          jackpotEffect(reel1, reel2, reel3); // ジャックポット演出
+        } else {
+          message.innerHTML = "";
+        }
+
+        // 確率を更新
+        updateChance();
+
+        spinButton.disabled = false;
+      }, 1500); // 回転が終わるまで待つ
+    }
+
+    function getRandomElement(reel) {
+      return reel[Math.floor(Math.random() * reel.length)];
+    }
+
+    function checkResult(reel1, reel2, reel3) {
+      reel1 = reel1.innerText;
+      reel2 = reel2.innerText;
+      reel3 = reel3.innerText;
+
+      // 昇格演出：BARが出たときに昇格
+      if (reel1 === "BAR" || reel2 === "BAR" || reel3 === "BAR") {
+        // 10%の確率で昇格
+        if (Math.random() < 0.1) {
+          if (reel1 === "BAR") {
+            reel1 = "7";
+            document.getElementById("reel1").innerText = "7";
+            return "昇格！";
+          } else if (reel2 === "BAR") {
+            reel2 = "7";
+            document.getElementById("reel2").innerText = "7";
+            return "昇格！";
+          } else if (reel3 === "BAR") {
+            reel3 = "7";
+            document.getElementById("reel3").innerText = "7";
+            return "昇格！";
+          }
+        }
+      }
+
+      // ジャックポット：すべてのリールが一致
+      if (reel1 === reel2 && reel2 === reel3) {
+        return "ジャックポット！";
+      }
+
+      // リーチ：リールが2つ以上一致
+      if (reel1 === reel2 || reel2 === reel3 || reel1 === reel3) {
+        return "リーチ！";
+      }
+
+      return "ハズレ";
+    }
+
+    function updateChance() {
+      currentChance += 0.00005; // 0.005%上げる
+      if (Math.random() < currentChance) {
+        console.log("確率が上がった!");
+      }
+    }
+
+    function addAnimation(reel1, reel2, reel3, className) {
+      reel1.classList.add(className);
+      reel2.classList.add(className);
+      reel3.classList.add(className);
+
+      setTimeout(() => {
+        reel1.classList.remove(className);
+        reel2.classList.remove(className);
+        reel3.classList.remove(className);
+      }, 1000); // 1秒間アニメーション
+    }
+
+    function reachEffect(reel1, reel2, reel3) {
+      // リーチ時にリールの周りを光らせる
+      reel1.classList.add("highlight");
+      reel2.classList.add("highlight");
+      reel3.classList.add("highlight");
+
+      setTimeout(() => {
+        reel1.classList.remove("highlight");
+        reel2.classList.remove("highlight");
+        reel3.classList.remove("highlight");
+      }, 1000); // 1秒間光らせる
+    }
+
+    function jackpotEffect(reel1, reel2, reel3) {
+      // ジャックポット時に全画面でアニメーション
+      document.body.style.backgroundColor = "gold"; // 背景色を金色に変更
+      document.body.style.transition = "background-color 1s ease";
+
+      setTimeout(() => {
+        document.body.style.backgroundColor = ""; // 背景色を元に戻す
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
