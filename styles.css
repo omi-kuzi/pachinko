@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,20 +16,27 @@ body {
 }
 
 .slot-reel {
-  width: 80px;
-  height: 120px;
-  margin: 0 10px;
-  border: 2px solid #333;
+  width: 100px;
+  height: 150px;
+  margin: 0 15px;
+  border: 5px solid #333;
   background-color: #fff;
   text-align: center;
   font-size: 30px;
-  line-height: 120px;
+  line-height: 150px;
   font-weight: bold;
   position: relative;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-out;
+}
+
+.slot-reel.highlight {
+  animation: flash 0.5s ease-out infinite alternate;
 }
 
 #spinButton {
-  padding: 10px 20px;
+  padding: 15px 30px;
   font-size: 18px;
   cursor: pointer;
   background-color: #333;
@@ -47,6 +54,7 @@ body {
   margin-top: 20px;
   font-size: 20px;
   font-weight: bold;
+  color: #333;
 }
 
 #message {
@@ -62,6 +70,7 @@ body {
   100% { background-color: #fff; }
 }
 
-.flash {
-  animation: flash 0.5s ease-out;
+@keyframes spinAnimation {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(360deg); }
 }
