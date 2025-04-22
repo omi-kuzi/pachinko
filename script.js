@@ -72,6 +72,26 @@ function checkResult(reel1, reel2, reel3) {
   reel2 = reel2.innerText;
   reel3 = reel3.innerText;
 
+  // 昇格演出：BARが出たときに昇格
+  if (reel1 === "BAR" || reel2 === "BAR" || reel3 === "BAR") {
+    // 10%の確率で昇格
+    if (Math.random() < 0.1) {
+      if (reel1 === "BAR") {
+        reel1 = "7";
+        document.getElementById("reel1").innerText = "7";
+        return "昇格！";
+      } else if (reel2 === "BAR") {
+        reel2 = "7";
+        document.getElementById("reel2").innerText = "7";
+        return "昇格！";
+      } else if (reel3 === "BAR") {
+        reel3 = "7";
+        document.getElementById("reel3").innerText = "7";
+        return "昇格！";
+      }
+    }
+  }
+
   // ジャックポット：すべてのリールが一致
   if (reel1 === reel2 && reel2 === reel3) {
     return "ジャックポット！";
@@ -80,23 +100,6 @@ function checkResult(reel1, reel2, reel3) {
   // リーチ：リールが2つ以上一致
   if (reel1 === reel2 || reel2 === reel3 || reel1 === reel3) {
     return "リーチ！";
-  }
-
-  // 昇格演出：BARが出たときに昇格
-  if (Math.random() < 0.1) { // 10%の確率で昇格演出
-    if (reel1 === "BAR") {
-      reel1 = "7";
-      document.getElementById("reel1").innerText = "7";
-      return "昇格！";
-    } else if (reel2 === "BAR") {
-      reel2 = "7";
-      document.getElementById("reel2").innerText = "7";
-      return "昇格！";
-    } else if (reel3 === "BAR") {
-      reel3 = "7";
-      document.getElementById("reel3").innerText = "7";
-      return "昇格！";
-    }
   }
 
   return "ハズレ";
