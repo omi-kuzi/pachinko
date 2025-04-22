@@ -1,4 +1,4 @@
-let baseChance = 1 / 550;
+let baseChance = 1 / 9550;
 let currentChance = baseChance;
 
 let reels = [
